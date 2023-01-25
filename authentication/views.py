@@ -1,5 +1,4 @@
-from django.db.utils import IntegrityError
-from rest_framework import views, status
+from rest_framework import views, status, generics
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -10,26 +9,12 @@ from google.oauth2.id_token import verify_oauth2_token
 from google.auth.transport import requests
 
 from user.models import User
+from .serializers import UserSerializer
 
 
-class RegisterView(views.APIView):
-    def post(self, request):
-        user_data = request.data
-
-        try:
-            User.objects.create_user(
-                first_name=user_data['first_name'],
-                last_name=user_data['last_name'],
-                username=user_data['username'],
-                email=user_data['email'],
-                password=user_data['password'],
-                gender=user_data.get("gender") or "male",
-                is_active=True
-            )
-        except IntegrityError:
-            raise Exception("User already exists!")
-
-        return Response(status=status.HTTP_201_CREATED)
+class RegisterView(generics.CreateAPIView):
+    queryset = None
+    serializer_class = UserSerializer
 
 
 class LoginView(TokenObtainPairView):

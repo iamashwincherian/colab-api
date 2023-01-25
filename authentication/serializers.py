@@ -4,17 +4,17 @@ from user.models import User
 from allauth.socialaccount.models import SocialAccount
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'username',
+                  'email', 'password', 'gender', 'is_active')
 
-        print('serialized data')
-
-        return data
 
 class MyTokenObtainSerializer(TokenObtainSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    social_account = serializers.PrimaryKeyRelatedField(queryset=SocialAccount.objects.all())
+    social_account = serializers.PrimaryKeyRelatedField(
+        queryset=SocialAccount.objects.all())
 
     class Meta:
         fields = ('user', 'social_account')
