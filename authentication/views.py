@@ -1,10 +1,9 @@
 from rest_framework import views, status, generics
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from allauth.socialaccount.models import SocialAccount
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
-
-from allauth.socialaccount.models import SocialAccount
 from google.oauth2.id_token import verify_oauth2_token
 from google.auth.transport import requests
 
@@ -24,16 +23,11 @@ class LoginView(TokenObtainPairView):
         serializer = self.get_serializer(data=request.data)
 
         if not serializer.is_valid():
-            print(serializer.errors)
-            raise Exception("Data invalid")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        user = {}
-        user["first_name"] = serializer.user.first_name
-        user["last_name"] = serializer.user.last_name
-        user["email"] = serializer.user.email
-        user["gender"] = serializer.user.gender
-        user["token"] = serializer.validated_data["access"]
-        return Response({"data": {"user": user}}, status=status.HTTP_200_OK)
+        token = serializer.validated_data["access"]
+        user = {**serializer.user, token: token}
+        return Response(user, status=status.HTTP_200_OK)
 
 
 class PasswordResetView(views.APIView):
