@@ -8,6 +8,7 @@ psycopg2-binary==2.9.3
 PyJWT==2.4.0
 pytz==2022.2.1
 sqlparse==0.4.2
-django-allauth
-dj-rest-auth
-google-api-python-client
+django-cors-headers==3.13.0
+django-allauth==0.52.0
+dj-rest-auth==2.2.7
+google-api-python-client==2.74.0
