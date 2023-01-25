@@ -45,13 +45,8 @@ class PasswordResetView(views.APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class UserListView(views.APIView):
-    def post(self, request):
-        users = User.objects.all()
-        for user in users:
-            print(user.username)
-
-        return Response({})
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
 
 
 class GoogleLogin(views.APIView):
