@@ -68,12 +68,5 @@ class GoogleLogin(views.APIView):
         social_account.save()
 
         refresh = RefreshToken.for_user(user)
-
-        data = {}
-        data["first_name"] = user.first_name
-        data["last_name"] = user.last_name
-        data["email"] = user.email
-        data["gender"] = user.gender
-        data["token"] = str(refresh.access_token)
-
-        return Response({"user": data})
+        user = {**user, token: str(refresh.access_token)}
+        return Response(data, status=status.HTTP_200_OK)
