@@ -64,7 +64,6 @@ class GoogleLogin(views.APIView):
             username=token["email"], email=token["email"], first_name=token["name"])
         social_account = SocialAccount(user=user, provider="google")
         social_account.uid = token["sub"]
-        user.save()
         social_account.save()
 
         refresh = RefreshToken.for_user(user)
