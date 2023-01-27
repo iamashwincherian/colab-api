@@ -19,8 +19,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('api/auth/', include('authentication.urls')),
-    path('api/user/', include('user.urls')),
-    # path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('api/users/', include('user.urls')),
     path('auth/registration/', include('dj_rest_auth.registration.urls')),
 ]
 

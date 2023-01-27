@@ -1,14 +1,13 @@
 from rest_framework import views, status, generics
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from allauth.socialaccount.models import SocialAccount
+
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from google.oauth2.id_token import verify_oauth2_token
-from google.auth.transport import requests
 
 from user.models import User
-from .serializers import UserSerializer
+from user.serializers import UserSerializer
+from .serializers import GoogleTokenSerializer
+from .mixins import ValidateGoogleToken
 
 
 class RegisterView(generics.CreateAPIView):
@@ -19,7 +18,7 @@ class RegisterView(generics.CreateAPIView):
 class LoginView(TokenObtainPairView):
     serializer_class = TokenObtainPairSerializer
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = self.get_serializer(data=request.data)
 
         if not serializer.is_valid():
@@ -49,18 +48,19 @@ class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
 
 
-class GoogleLogin(views.APIView):
-    def post(self, request):
-        data = request.data
-        id_token = data["id_token"]
+class GoogleAuthentication(ValidateGoogleToken):
+    serializer_class = GoogleTokenSerializer
 
-        token = verify_oauth2_token(id_token, requests.Request())
-        user = User.objects.create(
-            username=token["email"], email=token["email"], first_name=token["name"])
-        social_account = SocialAccount(user=user, provider="google")
-        social_account.uid = token["sub"]
-        social_account.save()
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        refresh = RefreshToken.for_user(user)
-        user = {**user, token: str(refresh.access_token)}
+        token = serializer.validated_data["id_token"]
+        google_user = self.get_google_user(token)
+        user = self.check_existing_user(google_user)
+        if not user:
+            user = self.create_user(google_user)
+
+        data = self.serialize_user(user)
         return Response(data, status=status.HTTP_200_OK)

@@ -1,14 +1,9 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenObtainSerializer
 from rest_framework import serializers
-from user.models import User
+
 from allauth.socialaccount.models import SocialAccount
 
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'username',
-                  'email', 'password', 'gender', 'is_active')
+from user.models import User
 
 
 class MyTokenObtainSerializer(TokenObtainSerializer):
@@ -20,7 +15,6 @@ class MyTokenObtainSerializer(TokenObtainSerializer):
         fields = ('user', 'social_account')
 
     def validate(self, attrs):
-        print('validate')
         user = attrs['user']
         social_account = attrs['social_account']
         if user and social_account:
@@ -33,5 +27,8 @@ class MyTokenObtainSerializer(TokenObtainSerializer):
         else:
             msg = ('Unable to log in with provided credentials.')
             raise serializers.ValidationError(msg, code='authorization')
-
         # return super().validate(attrs)
+
+
+class GoogleTokenSerializer(serializers.Serializer):
+    id_token = serializers.CharField()

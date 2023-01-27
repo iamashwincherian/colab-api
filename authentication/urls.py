@@ -14,5 +14,5 @@ urlpatterns = [
     path('token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify', TokenVerifyView.as_view(), name='token_verify'),
 
-    path('google/login/', views.GoogleLogin.as_view(), name='google_login'),
+    path('google/', views.GoogleAuthentication.as_view(), name='google_auth'),
 ]
