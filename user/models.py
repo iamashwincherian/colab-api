@@ -39,10 +39,14 @@ class User(AbstractUser):
         ('F', 'female'),
     ]
 
+    email = models.EmailField(("email address"), unique=True)
     gender = models.CharField(choices=GENDER_CHOICES,
                               default='M', max_length=1)
 
-    @property
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ()
+
+    @ property
     def name(self):
         return f'{self.first_name} {self.last_name}'.strip()
 
