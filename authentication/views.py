@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-
 from user.models import User
 from user.serializers import UserSerializer
 from .serializers import GoogleTokenSerializer
@@ -50,7 +49,7 @@ class PasswordResetView(views.APIView):
 class GoogleAuthentication(ValidateGoogleToken):
     serializer_class = GoogleTokenSerializer
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
