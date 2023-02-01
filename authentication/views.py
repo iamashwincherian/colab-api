@@ -6,13 +6,24 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from user.models import User
 from user.serializers import UserSerializer
-from .serializers import GoogleTokenSerializer
-from .mixins import ValidateGoogleToken
+from .serializers import GoogleTokenSerializer, NewUserTokenObtainPairSerializer
+from .mixins import ValidateGoogleToken, UserCreationMixin
 
 
-class RegisterView(generics.CreateAPIView):
-    queryset = None
-    serializer_class = UserSerializer
+class RegisterView(UserCreationMixin):
+    serializer_class = NewUserTokenObtainPairSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        email = serializer.validated_data["email"]
+        password = serializer.validated_data["password"]
+
+        new_user = self.create_user(email=email, password=password)
+        user = serializer.serialize_user(new_user)
+        return Response(user, status=status.HTTP_201_CREATED)
 
 
 class LoginView(TokenObtainPairView):
@@ -29,21 +40,6 @@ class LoginView(TokenObtainPairView):
 
         data = {**serializer.data, "token": token}
         return Response(data, status=status.HTTP_200_OK)
-
-
-class PasswordResetView(views.APIView):
-    def post(self, request):
-        user_data = request.data
-
-        try:
-            user = User.objects.get(username=user_data["username"])
-            user.set_password(user_data["password"])
-            user.save()
-
-        except Exception:
-            raise Exception("Something went wrong!")
-
-        return Response(status=status.HTTP_201_CREATED)
 
 
 class GoogleAuthentication(ValidateGoogleToken):

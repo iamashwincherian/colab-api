@@ -1,4 +1,4 @@
-from rest_framework import views
+from rest_framework import views, generics
 from google.oauth2.id_token import verify_oauth2_token
 from google.auth.transport import requests
 from allauth.socialaccount.models import SocialAccount
@@ -35,3 +35,11 @@ class ValidateGoogleToken(views.APIView):
         data["user"] = serialized_user.data
         data["token"] = token
         return data
+
+
+class UserCreationMixin(generics.GenericAPIView):
+    def create_user(self, email, password):
+        new_user = User.objects.create_user(
+            username=email, email=email, password=password)
+
+        return new_user
