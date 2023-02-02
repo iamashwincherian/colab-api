@@ -4,14 +4,13 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from user.models import User
 from user.serializers import UserSerializer
-from .serializers import GoogleTokenSerializer, NewUserTokenObtainPairSerializer
-from .mixins import ValidateGoogleToken, UserCreationMixin
+from .serializers import GoogleTokenSerializer, CredentialSerializer
+from .mixins import ValidateGoogleToken, Authenticate
 
 
-class RegisterView(UserCreationMixin):
-    serializer_class = NewUserTokenObtainPairSerializer
+class RegisterView(Authenticate):
+    serializer_class = CredentialSerializer
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -21,8 +20,12 @@ class RegisterView(UserCreationMixin):
         email = serializer.validated_data["email"]
         password = serializer.validated_data["password"]
 
-        new_user = self.create_user(email=email, password=password)
-        user = serializer.serialize_user(new_user)
+        try:
+            new_user = self.create_user(email=email, password=password)
+            user = self.serialize_user(new_user)
+        except Exception as error:
+            return Response({"error": "User already exists"}, status=status.HTTP_409_CONFLICT)
+
         return Response(user, status=status.HTTP_201_CREATED)
 
 

@@ -47,7 +47,7 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ()
 
-    @ property
+    @property
     def name(self):
         return f'{self.first_name} {self.last_name}'.strip()
 
