@@ -23,7 +23,8 @@ class RegisterView(Authenticate):
         try:
             new_user = self.create_user(email=email, password=password)
             user = self.serialize_user(new_user)
-        except Exception as error:
+        except:
+            # TODO: Handle errors individually
             return Response({"error": "User already exists"}, status=status.HTTP_409_CONFLICT)
 
         return Response(user, status=status.HTTP_201_CREATED)
