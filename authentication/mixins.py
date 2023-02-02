@@ -48,7 +48,7 @@ class Authenticate(generics.GenericAPIView):
 
     def create_user(self, email, password, first_name="", last_name=""):
         print("creating user:", email)
-        user = User.objects.create(
+        user = User.objects.create_user(
             username=email, email=email, password=password, first_name=first_name, last_name=last_name)
         return user
 
