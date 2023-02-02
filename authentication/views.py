@@ -27,6 +27,7 @@ class RegisterView(UserCreationMixin):
 
 
 class LoginView(TokenObtainPairView):
+    # TODO: Create a custom serializer
     serializer_class = TokenObtainPairSerializer
 
     def post(self, request):
@@ -43,6 +44,7 @@ class LoginView(TokenObtainPairView):
 
 
 class GoogleAuthentication(ValidateGoogleToken):
+    # TODO: Do validation in serializer
     serializer_class = GoogleTokenSerializer
 
     def post(self, request):
