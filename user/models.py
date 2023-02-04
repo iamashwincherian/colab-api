@@ -1,7 +1,8 @@
 from django.db import models
-from google.auth.transport import requests
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+
+from shared.models import TimeStampedModel
 
 
 class UserManager(BaseUserManager):
@@ -32,7 +33,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractUser):
+class User(AbstractUser, TimeStampedModel):
     objects = UserManager()
 
     GENDER_CHOICES = [
