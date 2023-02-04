@@ -47,14 +47,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'allauth',
     'allauth.account',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'corsheaders',
     'CollabBackend',
+    'user',
+    'shared',
     'authentication',
-    'user'
+    'project',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
