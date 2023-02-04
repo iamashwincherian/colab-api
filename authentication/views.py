@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
+from django.db import IntegrityError
 
 from .serializers import GoogleTokenSerializer, CredentialSerializer
 from .mixins import Authenticate
@@ -19,9 +20,11 @@ class RegisterView(Authenticate):
         try:
             new_user = self.create_user(email=email, password=password)
             user = self.serialize_user(new_user)
-        except:
-            # TODO: Handle errors individually
-            return Response({"error": "User already exists"}, status=status.HTTP_409_CONFLICT)
+        except IntegrityError as e:
+            if 'UNIQUE constraint failed' in str(e):
+                return Response({"error": "User already exists"}, status=status.HTTP_409_CONFLICT)
+            else:
+                return Response(e, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(user, status=status.HTTP_201_CREATED)
 
