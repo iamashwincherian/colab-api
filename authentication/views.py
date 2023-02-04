@@ -16,15 +16,18 @@ class RegisterView(Authenticate):
 
         email = serializer.validated_data["email"]
         password = serializer.validated_data["password"]
+        first_name = serializer.validated_data["first_name"]
+        last_name = serializer.validated_data["last_name"]
 
         try:
-            new_user = self.create_user(email=email, password=password)
+            new_user = self.create_user(
+                email=email, password=password, first_name=first_name, last_name=last_name)
             user = self.serialize_user(new_user)
         except IntegrityError as e:
-            if 'UNIQUE constraint failed' in str(e):
+            if 'duplicate key value violates unique constraint' in str(e):
                 return Response({"error": "User already exists"}, status=status.HTTP_409_CONFLICT)
-            else:
-                return Response(e, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(e, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(user, status=status.HTTP_201_CREATED)
 

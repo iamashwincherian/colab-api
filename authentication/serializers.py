@@ -21,3 +21,5 @@ class GoogleTokenSerializer(serializers.Serializer):
 class CredentialSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
+    first_name = serializers.CharField(allow_blank=False)
+    last_name = serializers.CharField(allow_blank=True)
