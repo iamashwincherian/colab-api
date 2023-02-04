@@ -1,5 +1,4 @@
-from rest_framework import views, generics
-
+from rest_framework import generics
 from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth import authenticate
 
@@ -25,7 +24,10 @@ class Authenticate(generics.GenericAPIView):
         social_account.save()
 
     def authenticate_user(self, email, password):
-        return authenticate(email=email, password=password)
+        user = authenticate(email=email, password=password)
+        if not user:
+            raise Exception("User not found")
+        return user
 
     def serialize_user(self, user):
         serialized_user = UserSerializer(instance=user).data
