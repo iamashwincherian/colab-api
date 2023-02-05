@@ -20,7 +20,7 @@ from django.conf import settings
 urlpatterns = [
     path('api/auth/', include('authentication.urls')),
     path('api/users/', include('user.urls')),
-    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('api/projects/', include('project.urls')),
 ]
 
 if settings.DEBUG:
