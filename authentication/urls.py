@@ -8,9 +8,9 @@ urlpatterns = [
     path('register', views.RegisterView.as_view(), name='register'),
 
     # JWT
-    path('token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
-    path('token/verify', TokenVerifyView.as_view(), name='token_verify'),
+    # path('token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('token/verify', TokenVerifyView.as_view(), name='token_verify'),
 
     path('google/', views.GoogleAuthentication.as_view(), name='google_auth'),
 ]
