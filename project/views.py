@@ -21,7 +21,6 @@ class GetProject(views.APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
-        # Todo: Serialize request
         project = Project.objects.filter(owner=request.user, id=id)
         if not project:
             raise NotFound({"message": "Project not found"})
