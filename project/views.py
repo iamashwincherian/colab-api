@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotFound
@@ -27,7 +26,7 @@ class ProjectView(generics.ListAPIView, generics.CreateAPIView):
         return super().perform_create(serializer)
 
 
-class GetProject(generics.RetrieveAPIView):
+class GetProject(generics.RetrieveAPIView, generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
@@ -38,3 +37,9 @@ class GetProject(generics.RetrieveAPIView):
             raise NotFound({"message": "Project not found"})
 
         return project.first()
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
