@@ -50,12 +50,15 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'corsheaders',
     'CollabBackend',
     'user',
     'shared',
     'authentication',
     'project',
-    'corsheaders',
+    'board',
+    'card',
+    'list',
 ]
 
 MIDDLEWARE = [
@@ -115,6 +118,7 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
