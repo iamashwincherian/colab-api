@@ -17,11 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
+prepend = 'api'
+
 urlpatterns = [
-    path('api/auth/', include('authentication.urls')),
-    path('api/users/', include('user.urls')),
-    path('api/projects/', include('project.urls')),
-    path('api/boards/', include('board.urls')),
+    path(f'{prepend}/auth/', include('authentication.urls')),
+    path(f'{prepend}/users/', include('user.urls')),
+    path(f'{prepend}/projects/', include('project.urls')),
+    path(f'{prepend}/boards/', include('board.urls')),
+    path(f'{prepend}/lists/', include('list.urls')),
+    path(f'{prepend}/cards/', include('card.urls')),
 ]
 
 if settings.DEBUG:
