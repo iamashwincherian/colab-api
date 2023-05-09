@@ -28,6 +28,5 @@ class BoardDetailView(generics.ListAPIView):
     def get_queryset(self):
         board = Board.objects.get(
             owner=self.request.user, id=self.request.query_params.get('board_id'))
-        print('board', board)
         list = List.objects.filter(board=board)
         return list

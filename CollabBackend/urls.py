@@ -24,8 +24,9 @@ urlpatterns = [
     path(f'{prepend}/users/', include('user.urls')),
     path(f'{prepend}/projects/', include('project.urls')),
     path(f'{prepend}/boards/', include('board.urls')),
-    path(f'{prepend}/lists/', include('list.urls')),
-    path(f'{prepend}/cards/', include('card.urls')),
+    path(f'{prepend}/boards/<str:board_id>/lists/', include('list.urls')),
+    path(f'{prepend}/boards/<str:board_id>/lists/<str:list_id>/cards/',
+         include('card.urls')),
 ]
 
 if settings.DEBUG:

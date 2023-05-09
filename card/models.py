@@ -6,6 +6,6 @@ from list.models import List
 
 
 class Card(TimeStampedModel):
-    title = models.CharField(max_length=255)
-    board = models.ForeignKey(Board, on_delete=models.CASCADE)
-    list = models.ForeignKey(List, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    board = models.ForeignKey(Board, on_delete=models.SET_NULL, null=True)
+    list = models.ForeignKey(List, on_delete=models.SET_NULL, null=True)
